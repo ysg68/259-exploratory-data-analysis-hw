@@ -1,3 +1,7 @@
+# 259 Homework - integrating skills
+# For full credit, answer at least 8/10 questions
+# List students working with below:
+
 library(tidyverse)
 library(lubridate)
 library(DataExplorer)
