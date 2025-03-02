@@ -1,4 +1,4 @@
-# 259 Homework - integrating skills
+# 259 Homework - exploratory data analysis + integrating skills
 # For full credit, answer at least 8/10 questions
 # List students working with below:
 
