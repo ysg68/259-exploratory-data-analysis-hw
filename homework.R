@@ -41,8 +41,8 @@ cities <- c("Charlotte", "Los Angeles", "Houston", "Indianapolis", "Jacksonville
 
 
 # QUESTION 2
-#> Use map_dfr() and your new function to read in all 10 stations
-#> map_dfr() will take each dataframe and automatically bind them.
+#> Use map() and your new function to read in all 10 stations
+#> Note that because map_dfr() has been superseded, and map() does not automatically bind rows, you will need to do so in the code.
 #> Save the resulting dataset to "ds"
 
 
