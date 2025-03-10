@@ -2,6 +2,8 @@
 # For full credit, answer at least 8/10 questions
 # List students working with below:
 
+# Yushan Guo
+
 library(tidyverse)
 library(lubridate)
 library(DataExplorer)
@@ -39,12 +41,22 @@ cities <- c("Charlotte", "Los Angeles", "Houston", "Indianapolis", "Jacksonville
 #> Check by reading/glimpsing a single station's file
 
 
+read_weather <- function(station_abb) {
+  filename <- paste0("us-weather-history/", station_abb, ".csv")
+  file <- read_csv(filename)
+  file_update <- file %>% mutate(date = as.Date(date), station = station_abb)
+  return(file_update)
+}
+#read_weather("KCLT")
+
 
 # QUESTION 2
 #> Use map() and your new function to read in all 10 stations
 #> Note that because map_dfr() has been superseded, and map() does not automatically bind rows, you will need to do so in the code.
 #> Save the resulting dataset to "ds"
 
+weather_list <- map(stations, read_weather)
+ds <- bind_rows(weather_list)
 
 
 # QUESTION 3
@@ -52,12 +64,32 @@ cities <- c("Charlotte", "Los Angeles", "Houston", "Indianapolis", "Jacksonville
 #> (station should be the level and city should be the label)
 #> Use fct_count to check that there are 365 days of data for each city 
 
+ds <- ds %>% mutate(city = ifelse(station == 'KCLT', 'Charlotte',
+                                  ifelse(station == 'KCQT', 'Los Angeles',
+                                         ifelse(station == 'KHOU', 'Houston',
+                                                ifelse(station == "KIND", 'Indianpolis',
+                                                       ifelse(station == 'KJAX', 'Jacksonville',
+                                                              ifelse(station == 'KMDW', 'Chicago',
+                                                                     ifelse(station == 'KNYC', 'New York City',
+                                                                            ifelse(station == 'KPHL', 'Philadelphia',
+                                                                                   ifelse(station == 'KPHX', 'Phoenix', 'Seattle'))))))))))
+ds$city <- as.factor(ds$city)
+
+fct_count(ds$city)
+
 
 # QUESTION 4
 #> Since we're scientists, let's convert all the temperatures to C
 #> Write a function to convert F to C, and then use mutate across to 
 #> convert all of the temperatures, rounded to a tenth of a degree
 
+temperature_converter <- function(x) {
+  c <- (x-32) * 5 / 9
+  return(c)
+}
+
+ds <- ds %>% mutate(across(ends_with("_temp")), temperature_converter(across(ends_with("_temp"))))
+ds <- ds %>% mutate(across(ends_with("_temp")), round(across(ends_with("_temp")), 1))
 
 
 ### CHECK YOUR WORK
@@ -75,10 +107,15 @@ cities <- c("Charlotte", "Los Angeles", "Houston", "Indianapolis", "Jacksonville
 #> Don't save this summary over the original dataset!
 
 
+count_extreme <- function() {
+  
+}
+
 
 # QUESTION 6
 #> Pull out the month from the date and make "month" a factor
 #> Split the tibble by month into a list of tibbles 
+
 
 
 
