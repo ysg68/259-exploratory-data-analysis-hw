@@ -115,6 +115,7 @@ ds <- ds %>% mutate(across(ends_with("_temp")), round(across(ends_with("_temp"))
 #> Split the tibble by month into a list of tibbles 
 
 ds <- ds %>% mutate(month_num = month(date))
+ds$month_num <- as.factor(ds$month_num)
 split_month <- ds %>% group_split(month_num)
 
 
@@ -141,7 +142,14 @@ for (i in 1:12) {
 #> Finally, use plot_correlation to investigate correlations between the continuous variables only
 #> Check the documentation for plot_correlation for an easy way to do this
 
+# By City
+ds %>% select(city, actual_mean_temp:record_precipitation) %>% plot_boxplot(by = "city")
 
+# By Month
+ds %>% select(month_num, actual_mean_temp:record_precipitation) %>% plot_boxplot(by = "month_num")
+
+# Correlations
+ds %>% plot_correlation(type = 'continuous', cor_args = list("use" = "pairwise.complete.obs"))
 
 
 # QUESTION 9
@@ -149,7 +157,9 @@ for (i in 1:12) {
 #> Use facet_wrap to make a separate plot for each city (3 columns)
 #> Make the points different colors according to month
 
-
+ggplot(ds, aes(x = date, y = actual_mean_temp, color = month_num)) + 
+  geom_point() + 
+  facet_wrap("city", ncol = 3)
 
 
 # QUESTION 10
