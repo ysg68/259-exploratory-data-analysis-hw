@@ -107,16 +107,15 @@ ds <- ds %>% mutate(across(ends_with("_temp")), round(across(ends_with("_temp"))
 #> Don't save this summary over the original dataset!
 
 
-count_extreme <- function() {
-  
-}
+
 
 
 # QUESTION 6
 #> Pull out the month from the date and make "month" a factor
 #> Split the tibble by month into a list of tibbles 
 
-
+ds <- ds %>% mutate(month_num = month(date))
+split_month <- ds %>% group_split(month_num)
 
 
 # QUESTION 7
@@ -126,6 +125,14 @@ count_extreme <- function() {
 #> Look at the documentation for the ?cor function if you've never used it before
 
 
+for (i in 1:12) {
+  month_num = unique(split_month[[i]]$month_num)
+  cor_precip = cor(split_month[[i]]$actual_precipitation, split_month[[i]]$average_precipitation)
+  cor_min = cor(split_month[[i]]$actual_min_temp, split_month[[i]]$average_min_temp)
+  cor_max = cor(split_month[[i]]$actual_max_temp, split_month[[i]]$average_max_temp)
+  print(paste0("Month: ", month_num, "   Precipitation Cor: ", cor_precip, "   Max Temp Cor: ", cor_max, 
+              "   Min Temp Cor: ", cor_min))
+}
 
 
 # QUESTION 8
